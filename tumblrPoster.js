@@ -28,12 +28,16 @@ module.exports = {
 
     download(qr.time, 'time.png', function(){
        download(qr.weather, 'weather.png', function(){
+         download('http://icons.wunderground.com/webcamramdisk/a/d/admin/1/current.jpg', 'current.jpg', function(){
           gm()
-              .in('-page', '+150+0')
+              .in('-page', '+0+150')
+              .in('current.jpg')
+              .in('-page', '+300+0')
+              .minify()                   
               .in('time.png')
               .minify()  
               .in('-page', '+0+0')
-              .in('weather.png')                    
+              .in('weather.png')   
               .mosaic()
               .write('qr_output.jpg', function (err) {
 
@@ -44,18 +48,21 @@ module.exports = {
                   caption: qrTimeData + ' /// ' + qrWeatherData,
                   data64: buff,                                    
                   tags: commaSeparatedTags
-              };
+              };                
 
               client.createPhotoPost(blogName, imageOptions, function (err, data) {
+                
+                console.log('errors:');
                 console.log(err);
-                console.log(data);
+                console.log('data:');
+                console.log(data);                              
+
               });
 
-              if (err) console.log(err);
+            })
           });
        });
     });
-
   }
 }
 
